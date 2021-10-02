@@ -20,12 +20,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let lines = 0
     let timerId
     let nextRandom = 0
-    const colors = []
+    const colors = [
+        'url(assets/blue_block.png)',
+        'url(assets/pink_block.png)',
+        'url(assets/purple_block.png)',
+        'url(assets/peach_block.png)',
+        'url(assets/yellow_block.png)'
+    ]
 
     function createGrid() {
         // The main grid
         let grid = document.querySelector('.grid')
-        for(let i = 0; 1 < GRID_SIZE; i++) {
+        for(let i = 0; i < GRID_SIZE; i++) {
             let gridElement = document.createElement("div")
             grid.appendChild(gridElement)
         }
@@ -37,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             grid.appendChild(gridElement)
         }
 
-        let previousGrid = document.querySelector('.previous-grid')
+        let previousGrid = document.querySelector(".previous-grid")
         for(let i = 0; i < 16; i++) {
             let gridElement = document.createElement("div")
             previousGrid.appendChild(gridElement)
@@ -45,60 +51,58 @@ document.addEventListener('DOMContentLoaded', () => {
         return grid;
     }
 
-        //assinging functions to keycodes
+    //assinging functions to keycodes
+    function control(e){
+        if (e.keyCode === 39) 
+            moveright()
+        else if(e.keyCode === 38)
+            rotate()
+        else if(e.keyCode === 37)
+            moveleft()
+        else if(e.keyCode === 40)
+            moveDown()
+    }
 
-        function control(e){
-            if(e.keyCode === 39) {
-                moveright()
-            } else if(e.keyCode === 38) {
-                rotate()
-            } else if(e.keyCode === 37) {
-                moveleft()
-            } else if(e.keyCode === 40) {
-                moveDown()
-            }
-        }
+    // speeding up the tetromino when keydown is pressed
+    document.addEventListener('keydown', control)
 
-        // speeding up the tetromino when keydown is pressed
-        document.addEventListener('keydown', control)
+    // the tetromines
+    const lTetromino = [
+        [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, 2],
+        [GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2 + 2],
+        [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, GRID_WIDTH * 2],
+        [GRID_WIDTH, GRID_WIDTH * 2, GRID_WIDTH * 2 + 1, GRID_WIDTH * 2 + 2]
+    ]
 
-        // the tetromines
-        const lTetromino = [
-            [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, 2],
-            [GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH *2 + 2],
-            [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, GRID_WIDTH * 2],
-            [GRID_WIDTH, GRID_WIDTH * 2, GRID_WIDTH * 2 + 1, GRID_WIDTH * 2 + 2]
-        ]
+    const zTetromino = [
+        [0, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1],
+        [GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2, GRID_WIDTH * 2 + 1],
+        [0, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1],
+        [GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2, GRID_WIDTH * 2 + 1]
+    ]
 
-        const zTetromino = [
-            [0, GRID_WIDTH, GRID_WIDTH + GRID_WIDTH * 2 + 1],
-            [GRID_WIDTH + 1, GRID_WIDTH + 1, GRID_WIDTH + 2],
-            [0, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1],
-            [GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2 + 1]
-        ]
+    const tTetromino = [
+        [1, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2],
+        [1, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2 + 1]
+        [GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2 + 1],
+        [1, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1]
+    ]
 
-        const tTetromino = [
-            [1, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2],
-            [1, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2 + 1]
-            [GRID_WIDTH. GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2 + 1],
-            [1, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1]
-        ]
+    const oTetromino = [
+        [0, 1, GRID_WIDTH, GRID_WIDTH + 1],
+        [0, 1, GRID_WIDTH, GRID_WIDTH + 1],
+        [0, 1, GRID_WIDTH, GRID_WIDTH + 1],
+        [0, 1, GRID_WIDTH, GRID_WIDTH + 1]
+    ]
 
-        const oTetromino = [
-            [0, 1, GRID_WIDTH, GRID_WIDTH + 1],
-            [0, 1, GRID_WIDTH, GRID_WIDTH + 1],
-            [0, 1, GRID_WIDTH, GRID_WIDTH + 1],
-            [0, 1, GRID_WIDTH, GRID_WIDTH + 1]
-        ]
-
-        const iTetromino = [
-            [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, GRID_WIDTH * 3 + 1],
-            [GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH + 3],
+    const iTetromino = [
+        [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, GRID_WIDTH * 3 + 1],
+        [GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH + 3],
         [1, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1, GRID_WIDTH * 3 + 1],
         [GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH + 3]
     ]
 
-    const theTetrominoes = [lTetromino, zTetromino, tTetromino, oTetromino]
+    const theTetrominoes = [lTetromino, zTetromino, tTetromino, oTetromino, iTetromino]
 
     // now we should select tetrominoes randomly
     let random = Math.floor(Math.random() * theTetrominoes.length)
@@ -143,21 +147,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     })
 
-    // now we write some collisions preventions for the shapes falling down and colliding with the already stopped shapes
-    function moveRight() {
+    function moveright() {
         undraw()
         const isAtRightEdge = current.some(index => (currentPosition + index) % width === width - 1)
-        if(!isAtRightEdge) currentPosition += 1
-        if(current.some(index => squares[currentPosition + index].classList.contains('block2'))) {
-            currentPosition += 1
+        if (!isAtRightEdge) currentPosition += 1
+        if (current.some(index => squares[currentPosition + index].classList.contains('block2'))) {
+          currentPosition -= 1
         }
         draw()
-    }
+      }
+    
+      // move right and prevent collisions with shapes moving right
+      function moveleft() {
+        undraw()
+        const isAtLeftEdge = current.some(index => (currentPosition + index) % width === 0)
+        if (!isAtLeftEdge) currentPosition -= 1
+        if (current.some(index => squares[currentPosition + index].classList.contains('block2'))) {
+          currentPosition += 1
+        }
+        draw()
+      }
 
     // freeze the shape
     function freeze() {
         // if the block already fall out
         if (current.some(index => squares[currentPosition + index + width].classList.contains('block3') || squares[currentPosition + index + width].classList.contains('block2'))) {
+            current.forEach(index => squares[index + currentPosition].classList.add('block2'))
             // new tetromino falling
             random = nextRandom
             nextRandom = Math.floor(Math.random() * theTetrominoes.length)
@@ -216,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // add score
     function addScore() {
-        for(currentIndex = 0; currentIndex < GRID_SIZE; currentIndex -= GRID_WIDTH) {
+        for(currentIndex = 0; currentIndex < GRID_SIZE; currentIndex += GRID_WIDTH) {
             const row = [currentIndex, currentIndex + 1, currentIndex + 2, currentIndex + 3, currentIndex + 4, currentIndex + 5, currentIndex + 6, currentIndex + 7, currentIndex + 8, currentIndex + 9]
             if(row.every(index => squares[index].classList.contains('block2'))) {
                 score += 10
