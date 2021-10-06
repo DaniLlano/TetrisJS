@@ -30,23 +30,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createGrid() {
         // The main grid
-        let grid = document.querySelector('.grid')
-        for(let i = 0; i < GRID_SIZE; i++) {
+        let grid = document.querySelector(".grid")
+        for (let i = 0; i < GRID_SIZE; i++) {
             let gridElement = document.createElement("div")
             grid.appendChild(gridElement)
         }
 
         // set base of grid
-        for(let i = 0; i < GRID_WIDTH; i++) {
+        for (let i = 0; i < GRID_WIDTH; i++) {
             let gridElement = document.createElement("div")
             gridElement.setAttribute("class", "block3")
             grid.appendChild(gridElement)
         }
 
         let previousGrid = document.querySelector(".previous-grid")
-        for(let i = 0; i < 16; i++) {
+        for (let i = 0; i < 16; i++) {
             let gridElement = document.createElement("div")
-            previousGrid.appendChild(gridElement)
+            previousGrid.appendChild(gridElement);
         }
         return grid;
     }
@@ -55,11 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function control(e){
         if (e.keyCode === 39) 
             moveright()
-        else if(e.keyCode === 38)
+        else if (e.keyCode === 38)
             rotate()
-        else if(e.keyCode === 37)
+        else if (e.keyCode === 37)
             moveleft()
-        else if(e.keyCode === 40)
+        else if (e.keyCode === 40)
             moveDown()
     }
 
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const tTetromino = [
         [1, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2],
-        [1, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2 + 1]
+        [1, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2 + 1],
         [GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH + 2, GRID_WIDTH * 2 + 1],
         [1, GRID_WIDTH, GRID_WIDTH + 1, GRID_WIDTH * 2 + 1]
     ]
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     startBtn.addEventListener('click', () => {
-        if(timerId) {
+        if (timerId) {
             clearInterval(timerId)
             timerId = null
         } else {
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function rotate() {
         undraw()
         currentRotation++
-        if(currentRotation === current.length){
+        if (currentRotation === current.length) {
             currentRotation = 0
         }
         current = theTetrominoes[random][currentRotation]
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // game over
     function gameOver() {
-        if(current.some(index => squares[currentPosition + index].classList.contains('block2'))) {
+        if (current.some(index => squares[currentPosition + index].classList.contains('block2'))) {
             scoreDisplay.innerHTML = 'end'
             clearInterval(timerId)
         }
@@ -231,9 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // add score
     function addScore() {
-        for(currentIndex = 0; currentIndex < GRID_SIZE; currentIndex += GRID_WIDTH) {
+        for (currentIndex = 0; currentIndex < GRID_SIZE; currentIndex += GRID_WIDTH) {
             const row = [currentIndex, currentIndex + 1, currentIndex + 2, currentIndex + 3, currentIndex + 4, currentIndex + 5, currentIndex + 6, currentIndex + 7, currentIndex + 8, currentIndex + 9]
-            if(row.every(index => squares[index].classList.contains('block2'))) {
+            if (row.every(index => squares[index].classList.contains('block2'))) {
                 score += 10
                 lines += 1
                 scoreDisplay.innerHTML = score
